@@ -1,0 +1,25 @@
+<audio id="audio" src="/media/music/Sia_-_Unstoppable.mp3" controls></audio>
+<img id="albumArt" src="" alt="Album Artwork" />
+
+<img id="albumArtSeparate" src="/media/images/sia_unstoppable.jpg" alt="Separate Album Artwork" style="display: none;" />
+
+<script>
+  const audio = document.getElementById("audio");
+  const albumArt = document.getElementById("albumArt");
+  const separateArt = document.getElementById("albumArtSeparate");
+
+  // Check if separate image is available (preferred)
+  if (separateArt.src) {
+    albumArt.src = separateArt.src;
+    separateArt.style.display = "block"; // Show separate image
+  } else {
+    // Fallback to potentially unreliable JavaScript approach
+    audio.addEventListener("loadedmetadata", () => {
+      if (audio.albumArtURL) {
+        albumArt.src = audio.albumArtURL;
+      } else {
+        console.log("Album art URL not available");
+      }
+    });
+  }
+</script>
