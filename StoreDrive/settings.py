@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 EXT = [
     'Accounts',
     'DataBase',
+    
 ]
 INSTALLED_APPS += EXT
 MIDDLEWARE = [

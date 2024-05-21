@@ -5,6 +5,7 @@ urlpatterns = [
     path('music/', music , name='music'),
     path('movies/', movies , name='movies'),
     path('videos/', videos , name='videos'),
+    path('videos/watch/<unique>', video_landing , name='video_landing'),
     path('photos/', photos , name='photos'),
     path('files/', files , name='files'),
     path('profile/', profile , name='profile'),

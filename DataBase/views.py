@@ -21,7 +21,7 @@ def dashboard(request):
     music = Music.objects.filter(user = user).count()
     videos = Videos.objects.filter(user = user).count()
     photos = Photos.objects.filter(user = user).count()
-    data = UserSession.objects.all().values()
+    
     
     file = movies + music + videos + photos
     context = {
@@ -248,6 +248,19 @@ def photos_edit(request):
         
     return render (request, 'photos_edit.html',context)
 
+
+@login_required
+def video_landing(request,unique):
+    unique = unique
+    video = Videos.objects.filter(unique_id = unique)
+    context = {
+       'video': video ,
+       'id': unique ,
+       
+    }
+    return render(request, "landingpages/video_landing_page.html",context)
+
+
 @login_required
 
 def delete_record(request,val,pk):
@@ -296,6 +309,7 @@ def delete_record(request,val,pk):
             return redirect('profile')
 
 
+@login_required
 def change_password_logged(request):
     if request.method == 'POST':
         current_password = request.POST.get('current_password')
@@ -325,3 +339,4 @@ def change_password_logged(request):
         return redirect(reverse('settings'))  # Redirect to success page
 
     return render(request, 'change_password_logged.html')
+

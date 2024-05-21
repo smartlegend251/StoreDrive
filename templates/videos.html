@@ -71,15 +71,15 @@
                   {% if videos %}
                       {% for x in videos %}
                           <div class="col-sm-4 col-md-3 margin_bottom_30 song-item">
-                              <div class="thumbnail-container">
-                                    <video width="260px" src="/media/{{ x.file }}" controls></video>
+                              <div class="thumbnail-container"><a href="{% url 'video_landing' x.unique_id %} ">
+                                    <video width="260px" src="/media/{{ x.file }}" ></video>
                                   
                                   <!-- <audio src="/{{ x.file }}" loop class="audio" controls></audio> -->
                               </div>
                               <div class="heading_section">
                                   <h4>{{ x.title }}</h4>
                               </div>
-                          </div>
+                          </div></a>
                       {% endfor %}
                   {% endif %}
               </div>

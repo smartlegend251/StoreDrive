@@ -1,25 +1,12 @@
-<audio id="audio" src="/media/music/Sia_-_Unstoppable.mp3" controls></audio>
-<img id="albumArt" src="" alt="Album Artwork" />
-
-<img id="albumArtSeparate" src="/media/images/sia_unstoppable.jpg" alt="Separate Album Artwork" style="display: none;" />
-
-<script>
-  const audio = document.getElementById("audio");
-  const albumArt = document.getElementById("albumArt");
-  const separateArt = document.getElementById("albumArtSeparate");
-
-  // Check if separate image is available (preferred)
-  if (separateArt.src) {
-    albumArt.src = separateArt.src;
-    separateArt.style.display = "block"; // Show separate image
-  } else {
-    // Fallback to potentially unreliable JavaScript approach
-    audio.addEventListener("loadedmetadata", () => {
-      if (audio.albumArtURL) {
-        albumArt.src = audio.albumArtURL;
-      } else {
-        console.log("Album art URL not available");
-      }
-    });
-  }
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <video width="400px" controls src="/media/videos/Levianth__Axol_-_Remember_ft.The_Tech_Thieves_lyrics_song_w7TyvFw.webm"></video>
+  <video width="400px" controls src="/media/videos/Shaitaan.2024.Web-dl.1080p.x265.HEVC.10bit.Hindi.DDP.5.1.ESub.Vegamovies.To.mkv"></video>
+</body>
+</html>

@@ -31,6 +31,4 @@ urlpatterns = [
     path('verification/<user>/<username>/<email>/', verification, name='verification'),
     path('change_password/<user>',change_password,name='change_password'),
     path('password_change_successful/',password_change_successful,name='password_change_successful'),
-]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

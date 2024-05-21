@@ -468,15 +468,15 @@
       <!-- base.html -->
 
 <script>
-   const sessionTimeoutWarning = 9 * 60 * 1000; // 9 minutes
-   const sessionTimeout = 10 * 60 * 1000; // 10 minutes
+   const sessionTimeoutWarning = 9 * 60 * 1000; // 179 minutes
+   const sessionTimeout = 10 * 60 * 1000; // 180 minutes
 
    setTimeout(() => {
        alert('You will be logged out in 1 minute due to inactivity.');
    }, sessionTimeoutWarning);
 
    setTimeout(() => {
-       window.location.href = "{% url 'login' %}";
+       window.location.href = "{% url 'logout' %}";
    }, sessionTimeout);
 </script>
 
