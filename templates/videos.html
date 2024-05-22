@@ -72,7 +72,7 @@
                       {% for x in videos %}
                           <div class="col-sm-4 col-md-3 margin_bottom_30 song-item">
                               <div class="thumbnail-container"><a href="{% url 'video_landing' x.unique_id %} ">
-                                    <video width="260px" src="/media/{{ x.file }}" ></video>
+                                    <video width="100%" height="210px" src="/media/{{ x.file }}" ></video>
                                   
                                   <!-- <audio src="/{{ x.file }}" loop class="audio" controls></audio> -->
                               </div>

@@ -11,6 +11,9 @@ from django.core.files.base import ContentFile
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC
 from datetime import datetime
+from django.http import FileResponse, HttpResponseNotFound
+import os
+
 
 
 @login_required
@@ -248,17 +251,118 @@ def photos_edit(request):
         
     return render (request, 'photos_edit.html',context)
 
+@login_required
+def movie_landing(request,unique):
+    unique = unique
+    video = Movies.objects.get(unique_id = unique)
+    video_path = video.file.path
+    print(video_path)
+    context = {
+       'video': video.file.url ,
+       'title': video.title,
+       'unique_id': unique ,
+       
+    }
+    return render(request, "landingpages/movie_landing_page.html",context)
 
 @login_required
 def video_landing(request,unique):
     unique = unique
-    video = Videos.objects.filter(unique_id = unique)
+    video = Videos.objects.get(unique_id = unique)
+    video_path = video.file.path
+    print(video_path)
     context = {
-       'video': video ,
-       'id': unique ,
+       'video': video.file.url ,
+       'title': video.title,
+       'unique_id': unique ,
        
     }
     return render(request, "landingpages/video_landing_page.html",context)
+
+import os
+import re
+import mimetypes
+import ffmpeg  # Import ffmpeg module
+from django.http import StreamingHttpResponse, HttpResponse
+from django.shortcuts import get_object_or_404
+from wsgiref.util import FileWrapper
+from .models import Videos
+
+class RangeFileWrapper(FileWrapper):
+    def __init__(self, filelike, blksize=8192, offset=0, length=None):
+        self.filelike = filelike
+        self.blksize = blksize
+        self.offset = offset
+        self.length = length
+        self.filelike.seek(offset, os.SEEK_SET)
+
+    def __iter__(self):
+        remaining = self.length
+        while remaining:
+            blocksize = min(self.blksize, remaining)
+            data = self.filelike.read(blocksize)
+            if not data:
+                break
+            yield data
+            remaining -= len(data)
+
+def get_video_duration(file_path):
+    try:
+        probe = ffmpeg.probe(file_path)
+        video_info = next(stream for stream in probe['streams'] if stream['codec_type'] == 'video')
+        duration = float(video_info['duration'])
+        return duration
+    except Exception as e:
+        print(f"Error getting video duration: {e}")
+        return None
+
+def stream_video(request, unique_id):
+    # Check if the video exists in the Videos model
+    video = get_object_or_404(Videos, unique_id=unique_id)
+    file_path = video.file.path
+
+    return stream_video_helper(request, file_path)
+
+def stream_video_movie(request, unique_id):
+    # Check if the video exists in the Movies model
+    video = get_object_or_404(Movies, unique_id=unique_id)
+    file_path = video.file.path
+
+    return stream_video_helper(request, file_path)
+
+def stream_video_helper(request, file_path):
+    file_size = os.path.getsize(file_path)
+    range_header = request.META.get('HTTP_RANGE', '').strip()
+    range_match = re.match(r'bytes=(\d+)-(\d+)?', range_header)
+    content_type, _ = mimetypes.guess_type(file_path)
+
+    if range_match:
+        first_byte, last_byte = range_match.groups()
+        first_byte = int(first_byte)
+        last_byte = int(last_byte) if last_byte else file_size - 1
+        if last_byte >= file_size:
+            last_byte = file_size - 1
+        length = last_byte - first_byte + 1
+        resp = StreamingHttpResponse(
+            RangeFileWrapper(open(file_path, 'rb'), offset=first_byte, length=length),
+            status=206,
+            content_type=content_type
+        )
+        resp['Content-Length'] = str(length)
+        resp['Content-Range'] = 'bytes {}-{}/{}'.format(first_byte, last_byte, file_size)
+    else:
+        resp = StreamingHttpResponse(FileWrapper(open(file_path, 'rb')), content_type=content_type)
+        resp['Content-Length'] = str(file_size)
+        resp['Accept-Ranges'] = 'bytes'
+
+    # Get duration and add it to the response headers
+    duration = get_video_duration(file_path)
+    if duration:
+        resp['X-Content-Duration'] = str(duration)
+
+    return resp
+
+
 
 
 @login_required

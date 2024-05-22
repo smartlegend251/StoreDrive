@@ -95,8 +95,8 @@
                     {% for x in movies %}
                         <div class="col-sm-4 col-md-3 margin_bottom_30 song-item">
                             <div class="thumbnail-container">
-                                  <video width="260px" src="/media/{{ x.file }}" controls></video>
-                                
+                                 <a href="{% url 'movie_landing' x.unique_id %}"> <video width="260px" src="{{ x.file.url }}" ></video>
+                                 </a>
                                 <!-- <audio src="/{{ x.file }}" loop class="audio" controls></audio> -->
                             </div>
                             <div class="heading_section">
