@@ -148,6 +148,6 @@ EMAIL_HOST_PASSWORD = 'febiytwrkxllzeqy'
 
 # automatic logout session
 
-SESSION_COOKIE_AGE = 600
+# SESSION_COOKIE_AGE = 600
 # Ensure the session is saved even if it hasn't been modified, useful for keeping the session alive on activity
-SESSION_SAVE_EVERY_REQUEST = True
+# SESSION_SAVE_EVERY_REQUEST = True
